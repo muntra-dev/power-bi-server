@@ -15,13 +15,18 @@ $Vnet = "$($parameters.Location)-$($parameters.VnetName)"
 $nsgName = "$($parameters.Servername)-$($parameters.NSGName)" 
 $publicIP = "$($parameters.Servername)-$($parameters.PublicIP)"
 
-$rule1 = New-AzNetworkSecurityRuleConfig -Name rdp-rule -Description "Allow RDP" `
+$rule1 = New-AzNetworkSecurityRuleConfig -Name storage-service-rule -Description "Allow Azure Storage" `
+    -Access Allow -Protocol * -Direction Outbound -Priority 110 -SourceAddressPrefix `
+    VirtualNetwork -SourcePortRange * -DestinationAddressPrefix Storage -DestinationPortRange 445
+
+$rule2 = New-AzNetworkSecurityRuleConfig -Name rdp-rule -Description "Allow RDP" `
     -Access Allow -Protocol Tcp -Direction Inbound -Priority 100 -SourceAddressPrefix `
     Internet -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 3389
-$nsg = New-AzNetworkSecurityGroup -ResourceGroupName $parameters.ResourceGroupName -Location $parameters.Location -Name `
-    $nsgName -SecurityRules $rule1
 
-$SingleSubnet = New-AzVirtualNetworkSubnetConfig -Name $parameters.SubnetName -AddressPrefix $SubnetAddressPrefix -NetworkSecurityGroup $nsg
+$nsg = New-AzNetworkSecurityGroup -ResourceGroupName $parameters.ResourceGroupName -Location $parameters.Location -Name `
+    $nsgName -SecurityRules $rule1,$rule2
+
+$SingleSubnet = New-AzVirtualNetworkSubnetConfig -Name $parameters.SubnetName -AddressPrefix $SubnetAddressPrefix -NetworkSecurityGroup $nsg -ServiceEndpoint "Microsoft.Storage"
 $Vnet = New-AzVirtualNetwork -Name $vnet -ResourceGroupName $parameters.ResourceGroupName -Location $parameters.Location -AddressPrefix $VnetAddressPrefix -Subnet $SingleSubnet
 $PIP = New-AzPublicIpAddress -Name $publicIP -DomainNameLabel $parameters.DNSNameLabel -ResourceGroupName $parameters.ResourceGroupName -Location $parameters.Location -AllocationMethod Dynamic
 $NIC = New-AzNetworkInterface -Name $NIC -ResourceGroupName $parameters.ResourceGroupName -Location $parameters.Location -SubnetId $Vnet.Subnets[0].Id -PublicIpAddressId $PIP.Id
@@ -35,3 +40,42 @@ $VirtualMachine = Set-AzVMSourceImage -VM $VirtualMachine -PublisherName 'Micros
 
 New-AzVM -ResourceGroupName $parameters.ResourceGroupName -Location $parameters.Location -VM $VirtualMachine -Verbose 
 
+# upload content to blob container
+
+#& ./uploadfilestoblob.ps1
+
+#write-host "Hello"
+#$PSScriptRoot 
+
+#$ScriptToRun= $PSScriptRoot+"\uploadfilestoblob.ps1"
+
+& .\uploadfilestoblob.ps1
+Start-Sleep -s 10
+### Run script to install mysql, powerbi
+
+# define your file URI
+$fileUri = @("https://mystorageaccount098716.blob.core.windows.net/powerbi-container/configure-server.ps1")
+
+#$fileUri = "https://mystorageaccount098716.blob.core.windows.net/powerbi-container/configure-server.ps1"
+
+$settings = @{"fileUris" = $fileUri};
+
+$storageAcctName = $parameters.storageAccountName
+$key = (Get-AzStorageAccountKey -ResourceGroupName $parameters.ResourceGroupName -AccountName $parameters.storageAccountName) | Where-Object {$_.KeyName -eq "key1"}
+$storageKey = $key.Value
+$protectedSettings = @{"storageAccountName" = $storageAcctName; "storageAccountKey" = $storageKey; "commandToExecute" = 'powershell -ExecutionPolicy Unrestricted -File "configure-server.ps1"'};
+
+Write-Host "Setting up VM extension: "
+Set-AzVMExtension -ResourceGroupName $parameters.ResourceGroupName `
+    -Location $parameters.Location `
+    -VMName $parameters.ServerName `
+    -Name "SereverConfiguration" `
+    -Publisher "Microsoft.Compute" `
+    -ExtensionType "CustomScriptExtension" `
+    -TypeHandlerVersion "1.10" `
+    -Settings $settings `
+    -ProtectedSettings $protectedSettings;
+
+
+
+Write-Host "Done setting up extension"

@@ -11,3 +11,5 @@ VMNIC=nic
 VnetName=VNet
 SubnetName=subnet1
 NSGName=nsg
+StorageAccountName=mystorageaccount098716
+ContainerName=powerbi-container
