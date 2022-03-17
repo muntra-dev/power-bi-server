@@ -43,13 +43,14 @@ New-AzVM -ResourceGroupName $parameters.ResourceGroupName -Location $parameters.
 # upload content to blob container
 
 & .\uploadfilestoblob.ps1
-Start-Sleep -s 10
+Start-Sleep -s 60
 ### Run script to install mysql, powerbi
 
 # define your file URI
 $uri1 = "https://$($parameters.StorageAccountName).blob.core.windows.net/$($parameters.ContainerName)/configure-server.ps1"
+$uri2 = "https://$($parameters.StorageAccountName).blob.core.windows.net/$($parameters.ContainerName)/PBIDesktopSetup_x64.exe"
 
-$fileUri = @($uri1)
+$fileUri = @($uri1, $uri2)
 
 $settings = @{"fileUris" = $fileUri};
 
