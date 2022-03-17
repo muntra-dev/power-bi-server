@@ -43,14 +43,15 @@ New-AzVM -ResourceGroupName $parameters.ResourceGroupName -Location $parameters.
 # upload content to blob container
 
 & .\uploadfilestoblob.ps1
-Start-Sleep -s 60
+
+Start-Sleep -s 5
 ### Run script to install mysql, powerbi
 
 # define your file URI
 $uri1 = "https://$($parameters.StorageAccountName).blob.core.windows.net/$($parameters.ContainerName)/configure-server.ps1"
-$uri2 = "https://$($parameters.StorageAccountName).blob.core.windows.net/$($parameters.ContainerName)/PBIDesktopSetup_x64.exe"
+#$uri2 = "https://$($parameters.StorageAccountName).blob.core.windows.net/$($parameters.ContainerName)/PBIDesktopSetup_x64.zip"
 
-$fileUri = @($uri1, $uri2)
+$fileUri = @($uri1)
 
 $settings = @{"fileUris" = $fileUri};
 
@@ -60,6 +61,7 @@ $storageKey = $key.Value
 $protectedSettings = @{"storageAccountName" = $storageAcctName; "storageAccountKey" = $storageKey; "commandToExecute" = 'powershell -ExecutionPolicy Unrestricted -File "configure-server.ps1"'};
 
 Write-Host "Setting up VM extension: "
+
 Set-AzVMExtension -ResourceGroupName $parameters.ResourceGroupName `
     -Location $parameters.Location `
     -VMName $parameters.ServerName `
@@ -71,5 +73,8 @@ Set-AzVMExtension -ResourceGroupName $parameters.ResourceGroupName `
     -ProtectedSettings $protectedSettings;
 
 
-
 Write-Host "Done setting up extension"
+
+# reboot required for the packages we installed
+#Restart-AzVM -ResourceGroupName  $parameters.ResourceGroupName -Name $parameters.ServerName
+

@@ -32,15 +32,4 @@ $Blob1 = @{
 Set-AzStorageBlobContent @Blob1
 
 
-## upload a file to the default account (inferred) access tier
-$powerbiexe = ".\PBIDesktopSetup_x64.exe"
-
-$Blob2 = @{
-  File             = $powerbiexe
-  Container        = $ContainerName
-  Blob             = "PBIDesktopSetup_x64.exe"
-  Context          = $Context
-  StandardBlobTier = 'Hot'
-}
-Set-AzStorageBlobContent @Blob2
 

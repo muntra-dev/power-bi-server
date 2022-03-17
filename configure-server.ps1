@@ -64,12 +64,21 @@ Write-Host "Verifying connection..."
 
 [Environment]::SetEnvironmentVariable("PATH", $Env:PATH + ";$mySqlPath\bin", [EnvironmentVariableTarget]::Machine)
 
-
 ### install Microsoft .NET Framework 4.8
-
 choco install -y dotnetfx
+
+# install webview
+$webviewFile = "C:\Users\ServerAdmin\Documents\MicrosoftEdgeWebview2Setup.exe"
+(New-Object Net.WebClient).DownloadFile('https://go.microsoft.com/fwlink/p/?LinkId=2124703', $webviewFile)
+
+C:\Users\ServerAdmin\Documents\MicrosoftEdgeWebview2Setup.exe
 
 ## install powerbi
 
-.\PBIDesktopSetup_x64.exe -q -norestart ACCEPT_EULA=1
+$powerbiFile = "C:\Users\ServerAdmin\Documents\PBIDesktopSetup_x64.exe"
+(New-Object Net.WebClient).DownloadFile('https://download.microsoft.com/download/8/8/0/880BCA75-79DD-466A-927D-1ABF1F5454B0/PBIDesktopSetup_x64.exe', $powerbiFile)
 
+C:\Users\ServerAdmin\Documents\PBIDesktopSetup_x64.exe -q -norestart ACCEPT_EULA=1
+
+Remove-Item -Path $webviewFile
+Remove-Item -Path $powerbiFile
