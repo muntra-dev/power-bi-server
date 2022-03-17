@@ -10,6 +10,8 @@ $StorageHT = @{
 }
 
 $StorageAccount = New-AzStorageAccount @StorageHT
+Start-Sleep -s 5
+
 $Context = $StorageAccount.Context
 
 # create container
@@ -18,7 +20,7 @@ $ContainerName = $parameters.ContainerName
 New-AzStorageContainer -Name $ContainerName -Context $Context -Permission Blob
 
 #
-$configureScript = "$($pwd)/configure-server.ps1"
+$configureScript = ".\configure-server.ps1"
 
 # upload a file to the default account (inferred) access tier
 $Blob1 = @{
@@ -29,4 +31,7 @@ $Blob1 = @{
   StandardBlobTier = 'Hot'
 }
 Set-AzStorageBlobContent @Blob1
+
+
+
 

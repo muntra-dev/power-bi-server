@@ -42,25 +42,18 @@ New-AzVM -ResourceGroupName $parameters.ResourceGroupName -Location $parameters.
 
 # upload content to blob container
 
-#& ./uploadfilestoblob.ps1
-
-#write-host "Hello"
-#$PSScriptRoot 
-
-#$ScriptToRun= $PSScriptRoot+"\uploadfilestoblob.ps1"
-
 & .\uploadfilestoblob.ps1
 Start-Sleep -s 10
 ### Run script to install mysql, powerbi
 
 # define your file URI
-$fileUri = @("https://mystorageaccount098716.blob.core.windows.net/powerbi-container/configure-server.ps1")
+$uri1 = "https://$($parameters.StorageAccountName).blob.core.windows.net/$($parameters.ContainerName)/configure-server.ps1"
 
-#$fileUri = "https://mystorageaccount098716.blob.core.windows.net/powerbi-container/configure-server.ps1"
+$fileUri = @($uri1)
 
 $settings = @{"fileUris" = $fileUri};
 
-$storageAcctName = $parameters.storageAccountName
+$storageAcctName = $parameters.StorageAccountName
 $key = (Get-AzStorageAccountKey -ResourceGroupName $parameters.ResourceGroupName -AccountName $parameters.storageAccountName) | Where-Object {$_.KeyName -eq "key1"}
 $storageKey = $key.Value
 $protectedSettings = @{"storageAccountName" = $storageAcctName; "storageAccountKey" = $storageKey; "commandToExecute" = 'powershell -ExecutionPolicy Unrestricted -File "configure-server.ps1"'};
