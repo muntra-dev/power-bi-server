@@ -19,10 +19,9 @@ $Context = $StorageAccount.Context
 $ContainerName = $parameters.ContainerName
 New-AzStorageContainer -Name $ContainerName -Context $Context -Permission Blob
 
-#
+## upload a file to the default account (inferred) access tier
 $configureScript = ".\configure-server.ps1"
 
-# upload a file to the default account (inferred) access tier
 $Blob1 = @{
   File             = $configureScript
   Container        = $ContainerName
@@ -33,5 +32,15 @@ $Blob1 = @{
 Set-AzStorageBlobContent @Blob1
 
 
+## upload a file to the default account (inferred) access tier
+$powerbiexe = ".\PBIDesktopSetup_x64.exe"
 
+$Blob2 = @{
+  File             = $powerbiexe
+  Container        = $ContainerName
+  Blob             = "PBIDesktopSetup_x64.exe"
+  Context          = $Context
+  StandardBlobTier = 'Hot'
+}
+Set-AzStorageBlobContent @Blob2
 

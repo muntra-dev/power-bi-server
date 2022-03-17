@@ -71,3 +71,5 @@ choco install -y dotnetfx
 
 ## install powerbi
 
+.\PBIDesktopSetup_x64.exe -q -norestart ACCEPT_EULA=1
+
