@@ -34,11 +34,11 @@ datadir=$($mySqlDataPath.Replace("\","\\"))
 "@ | Out-File $mySqlIniPath -Force -Encoding ASCII
 
 Write-Host "Initializing MySQL..."
-cmd /c "`"$mySqlPath\bin\mysqld`" --defaults-file=`"$mySqlIniPath`" --initialize-insecure"
 
 Write-Host "Installing MySQL as a service..."
 cmd /c "`"$mySqlPath\bin\mysqld`" --install $mySqlServiceName"
-cmd /c "`"$mySqlPath\bin\mysqld`" --initialize"
+cmd /c "`"$mySqlPath\bin\mysqld`" --defaults-file=`"$mySqlIniPath`" --initialize-insecure"
+#cmd /c "`"$mySqlPath\bin\mysqld`" --initialize"
 
 Start-Service $mySqlServiceName
 #Set-Service -Name $mySqlServiceName -StartupType Manual
@@ -52,6 +52,15 @@ Write-Host "Verifying connection..."
 ### Set path variable
 
 [Environment]::SetEnvironmentVariable("PATH", $Env:PATH + ";$mySqlPath\bin", [EnvironmentVariableTarget]::Machine)
+
+#######################################
+New-Item -Path "$mySqlPath\.sqlpwd"
+$text = "[mysqldump]`npassword=$pass" | Out-File -FilePath "$mySqlPath\.sqlpwd"
+
+$file = '.\restore-databases.ps1'
+$rep = '#filepath@'
+(Get-Content $file) -replace $rep, "`$path=$mySqlPath\.sqlpwd" | Set-Content $file
+
 
 ### install chococ and VC++ 2013
 
@@ -78,4 +87,8 @@ $powerbiFile = "C:\tempdata1\PBIDesktopSetup_x64.exe"
 
 C:\tempdata1\PBIDesktopSetup_x64.exe -q -norestart -passive ACCEPT_EULA=1
 
-#Remove-Item -Path "C:\tempdata1" -Recurse -Force
+Remove-Item -Path "C:\tempdata1" -Recurse -Force
+
+## restore databases
+
+& .\restore-databases.ps1

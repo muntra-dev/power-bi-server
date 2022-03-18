@@ -31,5 +31,16 @@ $Blob1 = @{
 }
 Set-AzStorageBlobContent @Blob1
 
+## upload a file to the default account (inferred) access tier
+$databaseScript = ".\restore-databases.ps1"
+
+$Blob2 = @{
+  File             = $databaseScript
+  Container        = $ContainerName
+  Blob             = "restore-databases.ps1"
+  Context          = $Context
+  StandardBlobTier = 'Hot'
+}
+Set-AzStorageBlobContent @Blob2
 
 

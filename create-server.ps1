@@ -49,9 +49,9 @@ Start-Sleep -s 5
 
 # define your file URI
 $uri1 = "https://$($parameters.StorageAccountName).blob.core.windows.net/$($parameters.ContainerName)/configure-server.ps1"
-#$uri2 = "https://$($parameters.StorageAccountName).blob.core.windows.net/$($parameters.ContainerName)/PBIDesktopSetup_x64.zip"
+$uri2 = "https://$($parameters.StorageAccountName).blob.core.windows.net/$($parameters.ContainerName)/restore-databases.ps1"
 
-$fileUri = @($uri1)
+$fileUri = @($uri1, $uri2)
 
 $settings = @{"fileUris" = $fileUri};
 

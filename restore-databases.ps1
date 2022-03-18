@@ -1,11 +1,4 @@
-﻿# Your account access key - must have read access to your S3 Bucket
-$accessKey = "AKIAT2RCYQZCP4RGTPBW"
-# Your account secret access key
-$secretKey = "7kcc9dO2YmiXWPRAfdUJyZB05drnf5mbaD+Cx1c0"
-# The region associated with your bucket e.g. eu-west-1, us-east-1 etc. (see http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-regions)
-$region = "eu-north-1"
-# The name of your S3 Bucket
-$bucket = "muntra-nightlies-test"
+
 # The folder in your bucket to copy, including trailing slash. Leave blank to copy the entire bucket
 $keyPrefix = "test/"
 # The local file path where files should be copied
