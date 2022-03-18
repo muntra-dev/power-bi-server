@@ -1,19 +1,15 @@
 # Don't change below line
 #filepath@
 
-# Your account access key - must have read access to your S3 Bucket
 $accessKey = ""
-# Your account secret access key
 $secretKey = ""
-# The region associated with your bucket e.g. eu-west-1, us-east-1 etc. (see http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-regions)
 $region = ""
-# The name of your S3 Bucket
 $bucket = ""
-# The folder in your bucket to copy, including trailing slash. Leave blank to copy the entire bucket
+# The folder in your bucket to copy,
 $keyPrefix = "test/"
 # The local file path where files should be copied
 $localPath = "C:\s3-downloads\"
-#mkdir $localPath
+mkdir $localPath
 
 ## Install aws powershell tools
 #Find-PackageProvider -Name "NuGet" -AllVersions -Force
