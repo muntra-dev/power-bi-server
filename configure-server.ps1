@@ -1,14 +1,3 @@
-# Script run test
-New-Item -Path 'C:\Users\ServerAdmin\Desktop\newfile1.txt' -ItemType File
-$text = 'Hello Kashif!' | Out-File -FilePath 'C:\Users\ServerAdmin\Desktop\newfile1.txt'
-
-
-### install VC++ 2013
-
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-
-choco install -y vcredist2013 
-
 ### install mysql 5.7.36
 
 $mySqlRoot = "$($env:ProgramFiles)\MySQL"
@@ -52,7 +41,7 @@ cmd /c "`"$mySqlPath\bin\mysqld`" --install $mySqlServiceName"
 cmd /c "`"$mySqlPath\bin\mysqld`" --initialize"
 
 Start-Service $mySqlServiceName
-Set-Service -Name $mySqlServiceName -StartupType Manual
+#Set-Service -Name $mySqlServiceName -StartupType Manual
 
 Write-Host "Setting root password..."
 cmd /c "`"$mySqlPath\bin\mysql`" -u root --skip-password -e `"ALTER USER 'root'@'localhost' IDENTIFIED BY '$mySqlRootPassword';`""
@@ -64,21 +53,29 @@ Write-Host "Verifying connection..."
 
 [Environment]::SetEnvironmentVariable("PATH", $Env:PATH + ";$mySqlPath\bin", [EnvironmentVariableTarget]::Machine)
 
+### install chococ and VC++ 2013
+
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+choco install -y vcredist2013 
+
 ### install Microsoft .NET Framework 4.8
 choco install -y dotnetfx
 
 # install webview
-$webviewFile = "C:\Users\ServerAdmin\Documents\MicrosoftEdgeWebview2Setup.exe"
+
+mkdir "C:\tempdata1"
+
+$webviewFile = "C:\tempdata1\MicrosoftEdgeWebview2Setup.exe"
 (New-Object Net.WebClient).DownloadFile('https://go.microsoft.com/fwlink/p/?LinkId=2124703', $webviewFile)
 
-C:\Users\ServerAdmin\Documents\MicrosoftEdgeWebview2Setup.exe
+Start-Process -FilePath "C:\tempdata1\MicrosoftEdgeWebview2Setup.exe" -Wait
 
 ## install powerbi
 
-$powerbiFile = "C:\Users\ServerAdmin\Documents\PBIDesktopSetup_x64.exe"
+$powerbiFile = "C:\tempdata1\PBIDesktopSetup_x64.exe"
 (New-Object Net.WebClient).DownloadFile('https://download.microsoft.com/download/8/8/0/880BCA75-79DD-466A-927D-1ABF1F5454B0/PBIDesktopSetup_x64.exe', $powerbiFile)
 
-C:\Users\ServerAdmin\Documents\PBIDesktopSetup_x64.exe -q -norestart ACCEPT_EULA=1
+C:\tempdata1\PBIDesktopSetup_x64.exe -q -norestart -passive ACCEPT_EULA=1
 
-Remove-Item -Path $webviewFile
-Remove-Item -Path $powerbiFile
+#Remove-Item -Path "C:\tempdata1" -Recurse -Force

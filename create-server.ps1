@@ -60,7 +60,7 @@ $key = (Get-AzStorageAccountKey -ResourceGroupName $parameters.ResourceGroupName
 $storageKey = $key.Value
 $protectedSettings = @{"storageAccountName" = $storageAcctName; "storageAccountKey" = $storageKey; "commandToExecute" = 'powershell -ExecutionPolicy Unrestricted -File "configure-server.ps1"'};
 
-Write-Host "Setting up VM extension: "
+Write-Host "Start configuring server "
 
 Set-AzVMExtension -ResourceGroupName $parameters.ResourceGroupName `
     -Location $parameters.Location `
@@ -73,7 +73,7 @@ Set-AzVMExtension -ResourceGroupName $parameters.ResourceGroupName `
     -ProtectedSettings $protectedSettings;
 
 
-Write-Host "Done setting up extension"
+Write-Host "Server Configuration has completed successfully" -ForegroundColor green 
 
 # reboot required for the packages we installed
 #Restart-AzVM -ResourceGroupName  $parameters.ResourceGroupName -Name $parameters.ServerName
