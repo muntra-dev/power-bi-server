@@ -91,4 +91,4 @@ Remove-Item -Path "C:\tempdata1" -Recurse -Force
 
 ## restore databases
 
-& .\restore-databases.ps1
+#& .\restore-databases.ps1
