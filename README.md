@@ -5,7 +5,7 @@
 1. **variables.txt** has variables required for installation. One should must change following variables before running script
    - AdminUser name
    - Password to some strong string
-   - DNSNameLabel must be unique within azure region because it's your public ip prefix.
+   - DNSNameLabel must be unique within azure region because its the public ip prefix.
 2. **installations.ps1** Installs PowerBI, MySQL 5.7.36 and MySQL Workbench 8.0.28.
 3. **schedule-restore.ps1** and **restore-databases.ps1** require AWS Access key, bucket name and directory path. Add your values before running script.
 4. **task-schedule.ps1** add a schedule task to run schedule-restore.ps1 script at 6 AM swedish time.
@@ -26,9 +26,9 @@ cd power-bi-server
 
 ./create-server.ps1
 
-# Wait for 15-20 mins for the script to finish installation work. You can RDP to server using public DNS name or server IP.
+# Wait for 15-20 mins for the script to finish installation work. Now RDP to server using public DNS name or server IP.
 
-# You can delete all the resources created previously using below command
+# Delete all the resources created previously using below command
 
 ./delete-resources.ps1
 
