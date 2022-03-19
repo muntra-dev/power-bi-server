@@ -36,16 +36,17 @@ $Credential = New-Object System.Management.Automation.PSCredential ($AdminUser, 
 $VirtualMachine = New-AzVMConfig -VMName $parameters.ServerName -VMSize $parameters.VMSize
 $VirtualMachine = Set-AzVMOperatingSystem -VM $VirtualMachine -Windows -ComputerName $parameters.ServerName -Credential $Credential -ProvisionVMAgent -EnableAutoUpdate
 $VirtualMachine = Add-AzVMNetworkInterface -VM $VirtualMachine -Id $NIC.Id
-$VirtualMachine = Set-AzVMSourceImage -VM $VirtualMachine -PublisherName 'MicrosoftWindowsServer' -Offer 'WindowsServer' -Skus '2019-datacenter-gensecond' -Version latest
+$VirtualMachine = Set-AzVMSourceImage -VM $VirtualMachine -PublisherName 'MicrosoftWindowsServer' -Offer 'WindowsServer' -Skus '2019-datacenter' -Version latest
 
 New-AzVM -ResourceGroupName $parameters.ResourceGroupName -Location $parameters.Location -VM $VirtualMachine -Verbose 
+
+Start-Sleep -s 60
 
 # upload content to blob container
 
 & .\uploadfilestoblob.ps1
 
-Start-Sleep -s 5
-### Run script to install mysql, powerbi
+### Run script to install powerbi
 
 # define your file URI
 $uri1 = "https://$($parameters.StorageAccountName).blob.core.windows.net/$($parameters.ContainerName)/configure-server.ps1"
@@ -73,8 +74,11 @@ Set-AzVMExtension -ResourceGroupName $parameters.ResourceGroupName `
     -ProtectedSettings $protectedSettings;
 
 
+Write-Host "Installing mysql 5.7 "
+
+Invoke-AzVMRunCommand -ResourceGroupName $parameters.ResourceGroupName -VMName $parameters.ServerName -CommandId 'RunPowerShellScript' -ScriptPath '.\mysql-5.7-installation.ps1'
+
 Write-Host "Server Configuration has completed successfully" -ForegroundColor green 
 
 # reboot required for the packages we installed
-#Restart-AzVM -ResourceGroupName  $parameters.ResourceGroupName -Name $parameters.ServerName
-
+Restart-AzVM -ResourceGroupName  $parameters.ResourceGroupName -Name $parameters.ServerName

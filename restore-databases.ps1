@@ -5,6 +5,7 @@ $accessKey = ""
 $secretKey = ""
 $region = ""
 $bucket = ""
+
 # The folder in your bucket to copy,
 $keyPrefix = "test/"
 # The local file path where files should be copied
@@ -40,4 +41,18 @@ foreach($file in $zipfiles) {
  $i+=1
  }
  
- #mysqldump --user='myusername' --password='mypassword' -h MyUrlOrIPAddress databasename > myfile.sql
+$y=0
+$z=1
+for($y=0; $y -lt $i; $y++) {
+
+   $dbfolder = Get-ChildItem -Path "$localPath\$z"
+ 
+   foreach($sqlfile in $dbfolders) {
+
+      mysqldump --defaults-file=$path –u root [io.path]::GetFileNameWithoutExtension("$sqlfile") > $sqlfile.Name
+   }
+
+$z+=1
+
+}
+
