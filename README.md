@@ -26,7 +26,7 @@ cd power-bi-server
 
 ./create-server.ps1
 
-# Wait for 15-20 mins for the script to finish installation work
+# Wait for 15-20 mins for the script to finish installation work. You can RDP to server using public DNS name or server IP.
 
 # Delete all the resources by using below command any time
 
