@@ -58,7 +58,6 @@ Delete all the resources created previously using the below command.
 
 ```
 ./delete-resources.ps1
-
 ```
 
 make changes
