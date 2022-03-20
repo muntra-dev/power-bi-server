@@ -1,10 +1,10 @@
-## logs
+# logs
 $ErrorActionPreference="SilentlyContinue"
 Stop-Transcript | out-null
 $ErrorActionPreference = "Continue"
 Start-Transcript -path C:\logs\task-schedule-log.txt -append
 
-## Change time zone to Sweden: SE W. Europe Standard Time	(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna
+# Change time zone to Sweden: SE W. Europe Standard Time	(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna
 
 Set-TimeZone -Nam "W. Europe Standard Time"
 

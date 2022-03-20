@@ -1,4 +1,4 @@
-## Logs
+# Logs
 $ErrorActionPreference="SilentlyContinue"
 Stop-Transcript | out-null
 $ErrorActionPreference = "Continue"
@@ -18,7 +18,7 @@ $localPath = "C:\Users\$env:UserName\Documents\tempfiles2\"
 
 mkdir $localPath
 
-## Install AWS PowerShell tools
+# Install AWS PowerShell tools
 Import-Module -Name AWS.Tools.S3
 
 $objects = Get-S3Object -BucketName $bucket -KeyPrefix $keyPrefix -AccessKey $accessKey -SecretKey $secretKey -Region $region
