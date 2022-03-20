@@ -1,39 +1,44 @@
-### power-bi-server 
-### Infrastructure-as-code for setting up PowerBI Windows Server 
+# power-bi-server
+## Infrastructure-as-code for Setting up PowerBI Windows Server for Muntra Databases
 
-## 
-1. **variables.txt** has variables required for installation. One should must change following variables before running script
+### Files
+| Name | Description |
+| ---- | ----------- |
+| **variables.txt**  | Holds variables used in installation. The following variables must be changed before running the script:
    - AdminUser name
-   - Password to some strong string
-   - DNSNameLabel must be unique within azure region because its the public ip prefix.
-2. **installations.ps1** Installs PowerBI and MySQL 5.7.36 server. Change mysql root password to some strong password.
-3. **schedule-restore.ps1** and **restore-databases.ps1** require AWS Access key, bucket name and directory path. Add your values before running script.
-4. **task-schedule.ps1** add a schedule task to run schedule-restore.ps1 script at 6 AM swedish time.
-5. **restore-databases.ps1** downloads databases files from aws bucket and restore them on mysql server. 
-6. **create-server.ps1** The main script that install the **Windows 2019 Server** and calls other scripts to complete the installations.
-7. **delete-resources.ps1** Deletes all the azure resources that has been created by create-server.ps1 script.
+   - Password to a strong string
+   - DNSNameLabel must be unique within the Azure region because its the public IP prefix. |
+| **create-server.ps1**  | The main script that installs the **Windows 2019 Server** and calls the other scripts. |
+| **installations.ps1**  | Installs PowerBI and MySQL 5.7.36 server. Change the MySQL root password to a strong string. |
+| **schedule-restore.ps1**  and **restore-databases.ps1** | Require an AWS Access key, a S3 bucket name and a directory path. Add your values before running script. |
+| **task-schedule.ps1**  | Adds a schedule task to PowerBI Server, that runs the schedule-restore.ps1 script at 6AM Swedish time. |
+| **restore-databases.ps1**  | Downloads the databases files from the AWS bucket and restores them in MySQL server. |
+| **delete-resources.ps1**  | Deletes all the Azure resources that have been created by the create-server.ps1 script. |
 
-#### How to Run the Installations?
+### Deployment
 
-From azure cloud shell open Powershell and clone the repo
+Log in to the Azure cloud shell. Open Powershell and clone this repo.
 
 ```
 git clone https://github.com/muntra-dev/power-bi-server.git
+```
 
+Make changes to the files as described above. Then navigate into the repo and run the installation with the following commands.
+
+```
 cd power-bi-server
-
-# make changes to the files as described above and then run the installation with below command
-
 ./create-server.ps1
+```
 
-# Wait for 15-20 mins for the script to finish installation work. Now RDP to server using public DNS name or server IP.
+Wait for the installation to finish (should take 15-20 mins).
 
-# Delete all the resources created previously using below command
+When it's done, RDP into the server using the public DNS name or server IP.
 
+Delete all the resources created previously using the below command.
+
+```
 ./delete-resources.ps1
-
 
 ```
 
 make changes
-
