@@ -40,17 +40,33 @@ $VirtualMachine = Set-AzVMSourceImage -VM $VirtualMachine -PublisherName 'Micros
 
 New-AzVM -ResourceGroupName $parameters.ResourceGroupName -Location $parameters.Location -VM $VirtualMachine -Verbose 
 
-Start-Sleep -s 60
+Start-Sleep -s 30
+
+Write-Host "Start configuring server "
+
+# installations
+
+Write-Host "Installing Power BI and Mysql 5.7.36 server "
+Invoke-AzVMRunCommand -ResourceGroupName $parameters.ResourceGroupName -VMName $parameters.ServerName -CommandId 'RunPowerShellScript' -ScriptPath '.\installations.ps1'
+# reboot required for the packages we installed
+
+Write-Host "Reboot VM: Required by the Installations we did" -ForegroundColor green 
+
+Restart-AzVM -ResourceGroupName  $parameters.ResourceGroupName -Name $parameters.ServerName
+
+Start-Sleep -s 30
+# initial databases restore
+
+Write-Host "Restoring Databases from AWS "
+Invoke-AzVMRunCommand -ResourceGroupName $parameters.ResourceGroupName -VMName $parameters.ServerName -CommandId 'RunPowerShellScript' -ScriptPath 'restore-databases.ps1'
 
 # upload content to blob container
 
 & .\uploadfilestoblob.ps1
 
-### Run script to install powerbi
-
 # define your file URI
-$uri1 = "https://$($parameters.StorageAccountName).blob.core.windows.net/$($parameters.ContainerName)/configure-server.ps1"
-$uri2 = "https://$($parameters.StorageAccountName).blob.core.windows.net/$($parameters.ContainerName)/restore-databases.ps1"
+$uri1 = "https://$($parameters.StorageAccountName).blob.core.windows.net/$($parameters.ContainerName)/task-schedule.ps1"
+$uri2 = "https://$($parameters.StorageAccountName).blob.core.windows.net/$($parameters.ContainerName)/schedule-restore.ps1"
 
 $fileUri = @($uri1, $uri2)
 
@@ -59,9 +75,9 @@ $settings = @{"fileUris" = $fileUri};
 $storageAcctName = $parameters.StorageAccountName
 $key = (Get-AzStorageAccountKey -ResourceGroupName $parameters.ResourceGroupName -AccountName $parameters.storageAccountName) | Where-Object {$_.KeyName -eq "key1"}
 $storageKey = $key.Value
-$protectedSettings = @{"storageAccountName" = $storageAcctName; "storageAccountKey" = $storageKey; "commandToExecute" = 'powershell -ExecutionPolicy Unrestricted -File "configure-server.ps1"'};
+$protectedSettings = @{"storageAccountName" = $storageAcctName; "storageAccountKey" = $storageKey; "commandToExecute" = 'powershell -ExecutionPolicy Unrestricted -File "task-schedule.ps1"'};
 
-Write-Host "Start configuring server "
+Write-Host "Scheduling task for daily databases restore script "
 
 Set-AzVMExtension -ResourceGroupName $parameters.ResourceGroupName `
     -Location $parameters.Location `
@@ -73,12 +89,12 @@ Set-AzVMExtension -ResourceGroupName $parameters.ResourceGroupName `
     -Settings $settings `
     -ProtectedSettings $protectedSettings;
 
-
-Write-Host "Installing mysql 5.7 "
-
-Invoke-AzVMRunCommand -ResourceGroupName $parameters.ResourceGroupName -VMName $parameters.ServerName -CommandId 'RunPowerShellScript' -ScriptPath '.\mysql-5.7-installation.ps1'
-
 Write-Host "Server Configuration has completed successfully" -ForegroundColor green 
 
-# reboot required for the packages we installed
-Restart-AzVM -ResourceGroupName  $parameters.ResourceGroupName -Name $parameters.ServerName
+Write-Host "Reboot Done: Now you can login to your VM" -ForegroundColor green 
+
+Write-Host "RDP using below DNS or IP" -ForegroundColor green 
+
+Write-Host "Public DNS: " $parameters.DNSNameLabel
+Write-Host "Public IP: "  (Get-AzPublicIpAddress -Name $publicIP).IpAddress
+

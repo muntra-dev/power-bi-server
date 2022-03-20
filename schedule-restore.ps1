@@ -2,10 +2,8 @@
 $ErrorActionPreference="SilentlyContinue"
 Stop-Transcript | out-null
 $ErrorActionPreference = "Continue"
-Start-Transcript -path C:\logs\restore-databases-log.txt -append
+Start-Transcript -path C:\logs\schedule-restore-log.txt -append
 
-# Don't change below line
-#filepath@
 
 $accessKey = ""
 $secretKey = ""
@@ -16,15 +14,11 @@ $bucket = ""
 # The folder in your bucket to copy,
 $keyPrefix = "test/"
 # The local file path where files should be copied
-$localPath = "C:\Users\$env:UserName\Documents\tempdbs\"
+$localPath = "C:\Users\$env:UserName\Documents\tempfiles2\"
 
 mkdir $localPath
 
 ## Install aws powershell tools
-#Find-PackageProvider -Name "NuGet" -AllVersions -Force
-
-Install-PackageProvider -Name "NuGet" -RequiredVersion "2.8.5.208" -Force
-Install-Module -Name AWS.Tools.S3 -Force
 Import-Module -Name AWS.Tools.S3
 
 $objects = Get-S3Object -BucketName $bucket -KeyPrefix $keyPrefix -AccessKey $accessKey -SecretKey $secretKey -Region $region
@@ -44,15 +38,16 @@ $i=1
 foreach($file in $zipfiles) {
 
  $file.FullName
- Expand-Archive $file.FullName -DestinationPath "$localPath$i"
+ Expand-Archive $file.FullName -DestinationPath "$localPath\$i"
+ Remove-Item $file
  $i+=1
  }
-
+ 
 #restore databases
 
 $Path = "C:\logs\info.txt"
-$param = Get-Content $Path | Out-String | ConvertFrom-StringData
-$password =$param.ps
+$p = Get-Content $Path | Out-String | ConvertFrom-StringData
+$password=$p.ps
 
 $y=1
 for ($y; $y -lt $i; $y++)
@@ -64,10 +59,11 @@ for ($y; $y -lt $i; $y++)
     $Inputstring = [io.path]::GetFileNameWithoutExtension($file)
     $CharArray =$InputString.Split("-")
     $dbName = $CharArray[1]
-    $dbPath = $file.FullName
+    $dbPath = $x[3].FullName
 
-   ### Restore
     
+    ### Restore
+    cmd /c "mysql -u root --password=$password -e `"DROP DATABASE $dbName;`" "
     cmd /c "mysql -u root --password=$password -e `"CREATE DATABASE $dbName;`" "
     cmd /c "mysql -u root  --password=$password  $dbName  < `"$dbPath`""
 

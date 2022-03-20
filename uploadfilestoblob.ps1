@@ -20,27 +20,26 @@ $ContainerName = $parameters.ContainerName
 New-AzStorageContainer -Name $ContainerName -Context $Context -Permission Blob
 
 ## upload a file to the default account (inferred) access tier
-$configureScript = ".\configure-server.ps1"
+$Script1 = ".\schedule-restore.ps1"
 
 $Blob1 = @{
-  File             = $configureScript
+  File             = $Script1
   Container        = $ContainerName
-  Blob             = "configure-server.ps1"
+  Blob             = "schedule-restore.ps1"
   Context          = $Context
   StandardBlobTier = 'Hot'
 }
 Set-AzStorageBlobContent @Blob1
 
 ## upload a file to the default account (inferred) access tier
-$databaseScript = ".\restore-databases.ps1"
+$Script2 = ".\task-schedule.ps1"
 
 $Blob2 = @{
-  File             = $databaseScript
+  File             = $Script2
   Container        = $ContainerName
-  Blob             = "restore-databases.ps1"
+  Blob             = "task-schedule.ps1"
   Context          = $Context
   StandardBlobTier = 'Hot'
 }
 Set-AzStorageBlobContent @Blob2
-
 
