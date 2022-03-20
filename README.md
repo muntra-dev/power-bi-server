@@ -4,10 +4,7 @@
 ### Files
 | Name | Description |
 | ---- | ----------- |
-| **variables.txt**  | Holds variables used in installation. The following variables must be changed before running the script:
-   - AdminUser name
-   - Password to a strong string
-   - DNSNameLabel must be unique within the Azure region because its the public IP prefix. |
+| **variables.txt**  | Holds variables used in installation. The following variables must be changed before running the script:<ul><li>AdminUser name</li><li>Password to a strong string</li><li>DNSNameLabel must be unique within the Azure region because its the public IP prefix.</li></ul> |
 | **create-server.ps1**  | The main script that installs the **Windows 2019 Server** and calls the other scripts. |
 | **installations.ps1**  | Installs PowerBI and MySQL 5.7.36 server. Change the MySQL root password to a strong string. |
 | **schedule-restore.ps1**  and **restore-databases.ps1** | Require an AWS Access key, a S3 bucket name and a directory path. Add your values before running script. |
