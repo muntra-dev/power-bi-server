@@ -4,13 +4,13 @@
 ### Files
 | Name | Description |
 | :--- | :---------- |
-| variables.txt  | Holds variables used in installation. The following variables must be changed before running the script:<ul><li>AdminUser name</li><li>Password to a strong string</li><li>DNSNameLabel must be unique within the Azure region because its the public IP prefix.</li></ul> |
-| create-server.ps1  | The main script that installs the **Windows 2019 Server** and calls the other scripts. |
-| installations.ps1  | Installs PowerBI and MySQL 5.7.36 server. Change the MySQL root password to a strong string. |
-| <ul><li>schedule-restore.ps1</li><li>restore-databases.ps1</li></ul> | Require an AWS Access key, a S3 bucket name and a directory path. Add your values before running script. |
-| task-schedule.ps1  | Adds a schedule task to PowerBI Server, that runs the schedule-restore.ps1 script at 6AM Swedish time. |
-| restore-databases.ps1  | Downloads the databases files from the AWS bucket and restores them in MySQL server. |
-| delete-resources.ps1  | Deletes all the Azure resources that have been created by the create-server.ps1 script. |
+| variables.txt  | Holds variables used in installation. The following variables must be changed before running the script:<ul><li>AdminUser name</li><li>Password to a strong string</li><li>DNSNameLabel must be unique within the Azure region because its the public IP prefix</li></ul> |
+| create-server.ps1  | The main script that installs the **Windows 2019 Server** and calls the other scripts |
+| installations.ps1  | Installs PowerBI and MySQL 5.7.36 server. Change the MySQL root password to a strong string |
+| <ul><li>schedule-restore.ps1</li><li>restore-databases.ps1</li></ul> | Require an AWS Access key, a S3 bucket name and a directory path. Add your values before running script |
+| task-schedule.ps1  | Adds a schedule task to PowerBI Server, that runs the schedule-restore.ps1 script at 6AM Swedish time |
+| restore-databases.ps1  | Downloads the databases files from the AWS bucket and restores them in MySQL server |
+| delete-resources.ps1  | Deletes all the Azure resources that have been created by the create-server.ps1 script |
 
 ### Deployment
 
