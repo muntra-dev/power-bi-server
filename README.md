@@ -14,7 +14,7 @@ Infrastructure-as-code for setting up a PowerBI Windows server for Muntra databa
 
 ## Deployment
 
-Log in to the Azure cloud shell. Open Powershell and clone this repo.
+Log in to the Azure cloud shell. Open PowerShell and clone this repo.
 
 ```
 git clone https://github.com/muntra-dev/power-bi-server.git
