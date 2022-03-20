@@ -1,22 +1,22 @@
-## logs
+# logs
 $ErrorActionPreference="SilentlyContinue"
 Stop-Transcript | out-null
 $ErrorActionPreference = "Continue"
 Start-Transcript -path C:\logs\installations-log.txt -append
 
-### install chococ and VC++ 2013
+# Install chococ and VC++ 2013
 
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
-choco install -y vcredist2013 
+choco install -y vcredist2013
 
-### install Microsoft .NET Framework 4.8
+# Install Microsoft .NET Framework 4.8
 choco install -y dotnetfx
 
-## workbench installation
-choco install -y mysql.workbench 
+# Install MySQL Workbench
+choco install -y mysql.workbench
 
-# install webview
+# Install Microsoft Edge WebView2
 
 $tempData = "C:\Users\$env:UserName\Documents\tempdata1"
 mkdir $tempData
@@ -26,7 +26,7 @@ $webviewFile = "$tempData\MicrosoftEdgeWebview2Setup.exe"
 
 Start-Process -FilePath "$tempData\MicrosoftEdgeWebview2Setup.exe" -Wait
 
-## install powerbi
+# Install Power BI
 
 $powerbiFile = "$tempData\PBIDesktopSetup_x64.exe"
 (New-Object Net.WebClient).DownloadFile('https://download.microsoft.com/download/8/8/0/880BCA75-79DD-466A-927D-1ABF1F5454B0/PBIDesktopSetup_x64.exe', $powerbiFile)
@@ -37,7 +37,7 @@ cd $tempData
 
 Remove-Item -Path $tempData -Recurse -Force
 
-### install mysql 5.7.36
+# Install MySQL 5.7.36
 
 $mySqlRoot = "$($env:ProgramFiles)\MySQL"
 $mySqlPath = "$mySqlRoot\MySQL Server 5.7"

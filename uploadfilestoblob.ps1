@@ -1,4 +1,4 @@
-## create storage account and blob container
+## Create storage account and blob container
 $Path = ".\variables.txt"
 $parameters = Get-Content $Path | Out-String | ConvertFrom-StringData
 
@@ -14,12 +14,12 @@ Start-Sleep -s 5
 
 $Context = $StorageAccount.Context
 
-# create container
+# Create container
 
 $ContainerName = $parameters.ContainerName
 New-AzStorageContainer -Name $ContainerName -Context $Context -Permission Blob
 
-## upload a file to the default account (inferred) access tier
+## Upload a file to the default account (inferred) access tier
 $Script1 = ".\schedule-restore.ps1"
 
 $Blob1 = @{
@@ -31,7 +31,7 @@ $Blob1 = @{
 }
 Set-AzStorageBlobContent @Blob1
 
-## upload a file to the default account (inferred) access tier
+## Upload a file to the default account (inferred) access tier
 $Script2 = ".\task-schedule.ps1"
 
 $Blob2 = @{
@@ -42,4 +42,3 @@ $Blob2 = @{
   StandardBlobTier = 'Hot'
 }
 Set-AzStorageBlobContent @Blob2
-

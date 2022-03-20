@@ -1,18 +1,18 @@
-# create RG
+# Create resource group
 $Path = ".\variables.txt"
 $parameters = Get-Content $Path | Out-String | ConvertFrom-StringData
 
 New-AzResourceGroup -Name $parameters.ResourceGroupName -Location $parameters.Location -Force
 
-# create server and open RDP port
+# Create server and open RDP port
 
-$AdminUser = $parameters.AdminUser 
+$AdminUser = $parameters.AdminUser
 $AdminSecurePassword = ConvertTo-SecureString $parameters.Password -AsPlainText -Force
 $SubnetAddressPrefix = "10.0.0.0/24"
 $VnetAddressPrefix = "10.0.0.0/16"
 $NIC = "$($parameters.ServerName)-nic"
 $Vnet = "$($parameters.Location)-$($parameters.VnetName)"
-$nsgName = "$($parameters.Servername)-$($parameters.NSGName)" 
+$nsgName = "$($parameters.Servername)-$($parameters.NSGName)"
 $publicIP = "$($parameters.Servername)-$($parameters.PublicIP)"
 
 $rule1 = New-AzNetworkSecurityRuleConfig -Name storage-service-rule -Description "Allow Azure Storage" `
@@ -38,19 +38,19 @@ $VirtualMachine = Set-AzVMOperatingSystem -VM $VirtualMachine -Windows -Computer
 $VirtualMachine = Add-AzVMNetworkInterface -VM $VirtualMachine -Id $NIC.Id
 $VirtualMachine = Set-AzVMSourceImage -VM $VirtualMachine -PublisherName 'MicrosoftWindowsServer' -Offer 'WindowsServer' -Skus '2019-datacenter' -Version latest
 
-New-AzVM -ResourceGroupName $parameters.ResourceGroupName -Location $parameters.Location -VM $VirtualMachine -Verbose 
+New-AzVM -ResourceGroupName $parameters.ResourceGroupName -Location $parameters.Location -VM $VirtualMachine -Verbose
 
 Start-Sleep -s 30
 
 Write-Host "Start configuring server "
 
-# installations
+# Run installations file
 
 Write-Host "Installing Power BI and Mysql 5.7.36 server "
 Invoke-AzVMRunCommand -ResourceGroupName $parameters.ResourceGroupName -VMName $parameters.ServerName -CommandId 'RunPowerShellScript' -ScriptPath '.\installations.ps1'
-# reboot required for the packages we installed
+# Perform required reboot, for the packages just installed
 
-Write-Host "Reboot VM: Required by the Installations we did" -ForegroundColor green 
+Write-Host "Reboot VM: Required by the Installations we did" -ForegroundColor green
 
 Restart-AzVM -ResourceGroupName  $parameters.ResourceGroupName -Name $parameters.ServerName
 
@@ -60,11 +60,11 @@ Start-Sleep -s 30
 Write-Host "Restoring Databases from AWS "
 Invoke-AzVMRunCommand -ResourceGroupName $parameters.ResourceGroupName -VMName $parameters.ServerName -CommandId 'RunPowerShellScript' -ScriptPath 'restore-databases.ps1'
 
-# upload content to blob container
+# Upload content to blob container
 
 & .\uploadfilestoblob.ps1
 
-# define your file URI
+# Define file URIs
 $uri1 = "https://$($parameters.StorageAccountName).blob.core.windows.net/$($parameters.ContainerName)/task-schedule.ps1"
 $uri2 = "https://$($parameters.StorageAccountName).blob.core.windows.net/$($parameters.ContainerName)/schedule-restore.ps1"
 
@@ -89,12 +89,11 @@ Set-AzVMExtension -ResourceGroupName $parameters.ResourceGroupName `
     -Settings $settings `
     -ProtectedSettings $protectedSettings;
 
-Write-Host "Server Configuration has completed successfully" -ForegroundColor green 
+Write-Host "Server configuration has completed successfully" -ForegroundColor green
 
-Write-Host "Reboot Done: Now you can login to your VM" -ForegroundColor green 
+Write-Host "Reboot done: You can now log in to your VM" -ForegroundColor green
 
-Write-Host "RDP using below DNS or IP" -ForegroundColor green 
+Write-Host "RDP using below DNS or IP" -ForegroundColor green
 
 Write-Host "Public DNS: " $parameters.DNSNameLabel
 Write-Host "Public IP: "  (Get-AzPublicIpAddress -Name $publicIP).IpAddress
-

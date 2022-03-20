@@ -13,14 +13,14 @@ $region = ""
 $bucket = ""
 
 
-# The folder in your bucket to copy,
+# Set bucket folder to copy
 $keyPrefix = "test/"
 # The local file path where files should be copied
 $localPath = "C:\Users\$env:UserName\Documents\tempdbs\"
 
 mkdir $localPath
 
-## Install aws powershell tools
+## Install AWS PowerShell tools
 #Find-PackageProvider -Name "NuGet" -AllVersions -Force
 
 Install-PackageProvider -Name "NuGet" -RequiredVersion "2.8.5.208" -Force
@@ -37,7 +37,7 @@ foreach($object in $objects) {
 	}
 }
 
-# Extract zip files
+# Extract Zip files
 $zipfiles = Get-ChildItem -Path $localPath
 
 $i=1
@@ -48,7 +48,7 @@ foreach($file in $zipfiles) {
  $i+=1
  }
 
-#restore databases
+# Restore databases
 
 $Path = "C:\logs\info.txt"
 $param = Get-Content $Path | Out-String | ConvertFrom-StringData
@@ -57,17 +57,17 @@ $password =$param.ps
 $y=1
 for ($y; $y -lt $i; $y++)
 {
-  $sqlfiles = Get-ChildItem -Path "$localPath$y" -Include *.sql -Recurse -Force 
+  $sqlfiles = Get-ChildItem -Path "$localPath$y" -Include *.sql -Recurse -Force
 
   foreach($file in $sqlfiles) {
- 
+
     $Inputstring = [io.path]::GetFileNameWithoutExtension($file)
     $CharArray =$InputString.Split("-")
     $dbName = $CharArray[1]
     $dbPath = $file.FullName
 
    ### Restore
-    
+
     cmd /c "mysql -u root --password=$password -e `"CREATE DATABASE $dbName;`" "
     cmd /c "mysql -u root  --password=$password  $dbName  < `"$dbPath`""
 
