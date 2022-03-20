@@ -1,7 +1,7 @@
 # power-bi-server
-## Infrastructure-as-code for Setting up PowerBI Windows Server for Muntra Databases
+Infrastructure-as-code for setting up a PowerBI Windows server for Muntra databases.
 
-### Files
+## Files
 | Name | Description |
 | :--- | :---------- |
 | variables.txt  | Holds variables used in installation. The following variables must be changed before running the script:<ul><li>AdminUser name</li><li>Password to a strong string</li><li>DNSNameLabel must be unique within the Azure region because its the public IP prefix</li></ul> |
@@ -12,7 +12,7 @@
 | restore-databases.ps1  | Downloads the databases files from the AWS bucket and restores them in MySQL server |
 | delete-resources.ps1  | Deletes all the Azure resources that have been created by the create-server.ps1 script |
 
-### Deployment
+## Deployment
 
 Log in to the Azure cloud shell. Open Powershell and clone this repo.
 
