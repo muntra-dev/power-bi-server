@@ -4,14 +4,13 @@ Infrastructure-as-code for setting up a Power BI Windows server for Muntra datab
 ## Files
 | Name | Description |
 | :--- | :---------- |
-| variables.txt | Holds variables used in the installation |
-| create-server.ps1 | Main script that installs a Windows 2019 Server and calls the other scripts |
-| installations.ps1 | Installs Power BI and MySQL 5.7.36 server. Change the MySQL root password to a strong string |
-| schedule-restore.ps1 | Require an AWS Access key, a S3 bucket name and a directory path. Add your values before running script |
-| restore-databases.ps1 | Require an AWS Access key, a S3 bucket name and a directory path. Add your values before running script |
-| task-schedule.ps1 | Adds a scheduled task that runs the schedule-restore.ps1 script at 6AM Swedish time |
-| restore-databases.ps1 | Downloads the databases files from the AWS bucket and restores them in MySQL server |
-| delete-resources.ps1 | Deletes all the Azure resources that have been created by the create-server.ps1 script |
+| `variables.txt` | Holds variables used in the installation |
+| `create-server.ps1` | Main script that installs a Windows 2019 Server and calls the other scripts (except `delete-resources.ps1`) |
+| `installations.ps1` | Installs Power BI and MySQL 5.7.36 server. Change the MySQL root password to a strong string |
+| `restore-databases.ps1` | Downloads the database files from the S3 bucket and restores them in MySQL server. Requires an AWS Access key, a S3 bucket name and a directory path. Add your values before running script |
+| `schedule-restore.ps1` | Require an AWS Access key, a S3 bucket name and a directory path. Add your values before running script |
+| `task-schedule.ps1` | Adds a scheduled task that runs the schedule-restore.ps1 script at 6AM Swedish time |
+| `delete-resources.ps1` | Deletes all the Azure resources that have been created by the `create-server.ps1` script |
 
 ## Deployment
 
