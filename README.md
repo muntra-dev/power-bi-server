@@ -6,7 +6,7 @@
    - AdminUser name
    - Password to some strong string
    - DNSNameLabel must be unique within azure region because its the public ip prefix.
-2. **installations.ps1** Installs PowerBI, MySQL 5.7.36 and MySQL Workbench 8.0.28.
+2. **installations.ps1** Installs PowerBI and MySQL 5.7.36 server.
 3. **schedule-restore.ps1** and **restore-databases.ps1** require AWS Access key, bucket name and directory path. Add your values before running script.
 4. **task-schedule.ps1** add a schedule task to run schedule-restore.ps1 script at 6 AM swedish time.
 5. **restore-databases.ps1** downloads databases files from aws bucket and restore them on mysql server. 
