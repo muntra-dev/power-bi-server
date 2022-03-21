@@ -20,6 +20,9 @@ choco install -y dotnetfx
 # Install MySQL Workbench
 choco install -y mysql.workbench
 
+# Install mysql connector 8.0.28
+choco install mysql-connector
+
 # Install Microsoft Edge WebView2
 
 $tempData = "C:\Users\$env:UserName\Documents\tempdata1"
