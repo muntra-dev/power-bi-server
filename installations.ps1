@@ -49,7 +49,7 @@ $mySqlIniPath = "$mySqlPath\my.ini"
 $mySqlDataPath = "$mySqlPath\data"
 $mySqlTemp = "$($env:temp)\mysql_temp"
 $mySqlServiceName = "MySQL"
-$mySqlRootPassword = $parameters.mysqlrootpassword
+$mySqlRootPassword = $parameters.mySqlRootPassword
 
 Write-Host "Installing MySQL Server 5.7" -ForegroundColor Cyan
 

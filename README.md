@@ -52,11 +52,12 @@ code database-config.txt
 Set the credentials that will be used for downloading the databases from S3, as well as the MySQL credentials:
 
 ```
-AdminUser=[user name]
-Password=[strong password]
-. . .
-DNSNameLabel=[DNS prefix]
-. . .
+accessKey=[AWS access key]
+bucket=[name of the S3 bucket]
+bucketDir=[name of the directory inside the S3 bucket]
+mySqlRootPassword=[MySQL root password]
+region=[AWS region]
+secretKey=[AWS API token]
 ```
 
 When you're done, you can save using `ctrl+s` or the options on the top right of the console.
@@ -72,8 +73,6 @@ The script should take 15-20 mins.
 
 When it's done, RDP into the server using the DNS or IP.
 
-make changes
-
 
 ## Files
 | Name | Run by | Description |
@@ -81,9 +80,9 @@ make changes
 | `server-config.txt` | Azure | Holds variables used in the server installation |
 | `database-config.txt` | Azure & server | Holds variables used in database download and restoring |
 | `create-server.ps1` | Azure | Main script that installs a Windows 2019 Server and calls the other scripts (except `delete-resources.ps1`) |
-| `installations.ps1` | Azure & server | Installs Power BI and MySQL 5.7.36 server. Change the MySQL root password to a strong string |
-| `restore-databases.ps1` | Azure & server | Creates and restores fresh databases. Downloads the database files from the S3 bucket and restores them in MySQL server. Requires an AWS Access key, a S3 bucket name and a directory path. Add your values before running `create-server.ps1` |
-| `schedule-restore.ps1` | Server | Drops and restores databases, in scheduled task. Require an AWS Access key, a S3 bucket name and a directory path. Add your values before running `create-server.ps1` |
+| `installations.ps1` | Azure & server | Installs Power BI and MySQL 5.7.36 server |
+| `restore-databases.ps1` | Azure & server | Creates and restores fresh databases. Downloads the database files from the S3 bucket and restores them in MySQL server |
+| `schedule-restore.ps1` | Server | Drops and restores databases, in scheduled task |
 | `task-schedule.ps1` | Azure & server | Adds a scheduled task that runs `schedule-restore.ps1` at 6AM Swedish time |
 | `upload-files-to-blob` | Azure | Uploads files to Azure BLOB so they can be downloaded to server later. The files that need to be on the server are `database-config.txt`, `schedule-restore.ps1` and `task-schedule.ps1` |
 | `delete-resources.ps1` | Azure | Deletes the server and related resources from Azure |

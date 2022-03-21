@@ -14,7 +14,7 @@ $secretKey=$parameters.secretKey
 $region=$parameters.region
 $bucket=$parameters.bucket
 $keyPrefix=$parameters.bucketDir
-$password=$parameters.mysqlrootpassword
+$password=$parameters.mySqlRootPassword
 
 # The local file path where files should be copied
 $localPath = "C:\Users\$env:UserName\Documents\tempdbs\"

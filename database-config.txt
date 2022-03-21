@@ -1,8 +1,8 @@
-## variables for S3 and mysql
+# Variables for S3 and MySQL
 
 accessKey=
-secretKey=
-region=
 bucket=
 bucketDir=
-mysqlrootpassword=
+mySqlRootPassword=
+region=
+secretKey=
