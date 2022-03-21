@@ -8,6 +8,10 @@ Start-Transcript -path C:\logs\task-schedule-log.txt -append
 
 Set-TimeZone -Nam "W. Europe Standard Time"
 
+# update language to US English
+
+Set-WinUILanguageOverride -Language en-US
+
 # Copy script to C: drive
 
 mkdir "C:\ScheduleScript"
