@@ -17,20 +17,29 @@ Navigate into the repo.
 cd power-bi-server
 ```
 
-Open the `variables.txt` using your preferred file editor. Here we'll use `x`:
+Open the `variables.txt` using your preferred file editor. Here we'll use `code`:
 ```
-xx variables.txt
+code variables.txt
 ```
 
-Once you've opened the file, change the credentials for x:
+Once you've opened the file, set the credentials that will be used for RDPing into the server:
 
 ```
-AdminUser=ServerAdmin
-Password=Admin@@12345
+AdminUser=[user name]
+Password=[strong password]
 . . .
 ```
 
-`DNSNameLabel` must be unique within the Azure region because it's the public IP prefix.
+Next, you need to set `DNSNameLabel`. This will determine the server's public IP.
+
+The format of server's public IP will be:
+```
+<DNSNameLabel>.<Azure region>.cloudapp.azure.com
+```
+
+`DNSNameLabel` must be unique within the Azure region. It's good practice to treat `DNSNameLabel` as a secret so that hackers won't know the server DNS.
+
+When you're done, the file can be saved using `ctrl+s` or the options on the top right of the console.
 
 
 After this, you're ready to run the installation:
