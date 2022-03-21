@@ -44,6 +44,24 @@ The format of the DNS will be:
 When you're done, the file can be saved using `ctrl+s` or the options on the top right of the console.
 
 
+Now, open the `database-config.txt`:
+```
+code database-config.txt
+```
+
+Set the credentials that will be used for downloading the databases from S3, as well as the MySQL credentials:
+
+```
+AdminUser=[user name]
+Password=[strong password]
+. . .
+DNSNameLabel=[DNS prefix]
+. . .
+```
+
+When you're done, you can save using `ctrl+s` or the options on the top right of the console.
+
+
 After this, you're ready to run the installation:
 
 ```
