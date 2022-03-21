@@ -71,7 +71,7 @@ make changes
 | `delete-resources.ps1` | Deletes the server and related resources from Azure |
 
 ## How to Delete Everything
-Delete all the resources created previously using the below command.
+To delete all the resources created by `create-server.ps1`, use the below command:
 
 ```
 ./delete-resources.ps1
