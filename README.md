@@ -28,16 +28,18 @@ Once you've opened the file, set the credentials that will be used for RDPing in
 AdminUser=[user name]
 Password=[strong password]
 . . .
+DNSNameLabel=[DNS prefix]
+. . .
 ```
 
-Next, you need to set `DNSNameLabel`. This will determine the server's public DNS. The DNS can be used to RDP into the server later.
+The `DNSNameLabel` will determine the server's public DNS. The DNS can be used to RDP into the server later.
 
 The format of the DNS will be:
 ```
 <DNSNameLabel>.<Azure region>.cloudapp.azure.com
 ```
 
-`DNSNameLabel` must be unique within the Azure region. It's good practice to treat `DNSNameLabel` as a secret so that hackers won't know the server DNS.
+`DNSNameLabel` must be unique within the Azure region. It's good practice to treat `DNSNameLabel` as a secret so that hackers won't know the server's DNS.
 
 When you're done, the file can be saved using `ctrl+s` or the options on the top right of the console.
 
