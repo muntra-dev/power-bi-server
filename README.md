@@ -30,9 +30,9 @@ Password=[strong password]
 . . .
 ```
 
-Next, you need to set `DNSNameLabel`. This will determine the server's public IP.
+Next, you need to set `DNSNameLabel`. This will determine the server's public DNS. The DNS can be used to RDP into the server later.
 
-The format of server's public IP will be:
+The format of the DNS will be:
 ```
 <DNSNameLabel>.<Azure region>.cloudapp.azure.com
 ```
