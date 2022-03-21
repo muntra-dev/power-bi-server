@@ -18,9 +18,12 @@ Copy-Item ".\schedule-restore.ps1" -Destination "C:\ScheduleScript"
 $Trigger = New-ScheduledTaskTrigger -Daily -At 6am
 
 $User= "NT AUTHORITY\SYSTEM" # Specify the account to run the script
-$Action= New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "C:\ScheduleScript\schedult-restore.ps1"
+$Action= New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "C:\ScheduleScript\schedule-restore.ps1"
 
 Register-ScheduledTask -TaskName "RestoreAWSDBstoMySQLServer" -Trigger $Trigger -User $User -Action $Action -RunLevel Highest -Force
 
+##
+
+Move-Item -Path ".\database-config.txt" -Destination "C:\logs\database-config.txt"
 
 Stop-Transcript

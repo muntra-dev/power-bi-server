@@ -43,23 +43,6 @@ New-AzVM -ResourceGroupName $parameters.ResourceGroupName -Location $parameters.
 Start-Sleep -s 30
 
 Write-Host "Start configuring server "
-
-# Run installations file
-
-Write-Host "Installing Power BI and Mysql 5.7.36 server "
-Invoke-AzVMRunCommand -ResourceGroupName $parameters.ResourceGroupName -VMName $parameters.ServerName -CommandId 'RunPowerShellScript' -ScriptPath '.\installations.ps1'
-# Perform required reboot, for the packages just installed
-
-Write-Host "Reboot VM: Required by the Installations we did" -ForegroundColor green
-
-Restart-AzVM -ResourceGroupName  $parameters.ResourceGroupName -Name $parameters.ServerName
-
-Start-Sleep -s 30
-# initial databases restore
-
-Write-Host "Restoring Databases from AWS "
-Invoke-AzVMRunCommand -ResourceGroupName $parameters.ResourceGroupName -VMName $parameters.ServerName -CommandId 'RunPowerShellScript' -ScriptPath 'restore-databases.ps1'
-
 # Upload content to blob container
 
 & .\upload-files-to-blob.ps1
@@ -67,8 +50,10 @@ Invoke-AzVMRunCommand -ResourceGroupName $parameters.ResourceGroupName -VMName $
 # Define file URIs
 $uri1 = "https://$($parameters.StorageAccountName).blob.core.windows.net/$($parameters.ContainerName)/task-schedule.ps1"
 $uri2 = "https://$($parameters.StorageAccountName).blob.core.windows.net/$($parameters.ContainerName)/schedule-restore.ps1"
+$uri3 = "https://$($parameters.StorageAccountName).blob.core.windows.net/$($parameters.ContainerName)/database-config.txt"
 
-$fileUri = @($uri1, $uri2)
+
+$fileUri = @($uri1, $uri2, $uri3)
 
 $settings = @{"fileUris" = $fileUri};
 
@@ -89,11 +74,28 @@ Set-AzVMExtension -ResourceGroupName $parameters.ResourceGroupName `
     -Settings $settings `
     -ProtectedSettings $protectedSettings;
 
+# Run installations file
+Start-Sleep -s 10
+Write-Host "Installing Power BI and Mysql 5.7.36 server "
+Invoke-AzVMRunCommand -ResourceGroupName $parameters.ResourceGroupName -VMName $parameters.ServerName -CommandId 'RunPowerShellScript' -ScriptPath '.\installations.ps1'
+# Perform required reboot, for the packages just installed
+
+Write-Host "Reboot VM: Required by the Installations we did" -ForegroundColor green
+
+Restart-AzVM -ResourceGroupName  $parameters.ResourceGroupName -Name $parameters.ServerName
+
+Start-Sleep -s 30
+# initial databases restore
+
+Write-Host "Restoring Databases from AWS "
+Invoke-AzVMRunCommand -ResourceGroupName $parameters.ResourceGroupName -VMName $parameters.ServerName -CommandId 'RunPowerShellScript' -ScriptPath 'restore-databases.ps1'
+
+
 Write-Host "Server configuration has completed successfully" -ForegroundColor green
 
-Write-Host "Reboot done: You can now log in to your VM" -ForegroundColor green
+Write-Host "You can now log in to your VM" -ForegroundColor green
 
 Write-Host "RDP using below DNS or IP" -ForegroundColor green
 
-Write-Host "Public DNS: " $parameters.DNSNameLabel
+Write-Host "DNS: " (Get-AzPublicIpAddress -Name $publicIP).DnsSettings.fqdn
 Write-Host "Public IP: "  (Get-AzPublicIpAddress -Name $publicIP).IpAddress

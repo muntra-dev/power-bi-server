@@ -4,15 +4,16 @@ Stop-Transcript | out-null
 $ErrorActionPreference = "Continue"
 Start-Transcript -path C:\logs\schedule-restore-log.txt -append
 
+$Path = "C:\logs\database-config.txt"
+$parameters = Get-Content $Path | Out-String | ConvertFrom-StringData
 
-$accessKey = ""
-$secretKey = ""
-$region = ""
-$bucket = ""
+$accessKey=$parameters.accessKey
+$secretKey=$parameters.secretKey
+$region=$parameters.region
+$bucket=$parameters.bucket
+$keyPrefix=$parameters.bucketDir
+$password=$parameters.mysqlrootpassword
 
-
-# Set bucket folder to copy
-$keyPrefix = "test/"
 # The local file path where files should be copied
 $localPath = "C:\Users\$env:UserName\Documents\tempfiles2\"
 
@@ -39,15 +40,11 @@ foreach($file in $zipfiles) {
 
  $file.FullName
  Expand-Archive $file.FullName -DestinationPath "$localPath\$i"
- Remove-Item $file
+ 
  $i+=1
  }
 
 # Restore databases
-
-$Path = "C:\logs\info.txt"
-$p = Get-Content $Path | Out-String | ConvertFrom-StringData
-$password=$p.ps
 
 $y=1
 for ($y; $y -lt $i; $y++)
@@ -59,7 +56,7 @@ for ($y; $y -lt $i; $y++)
     $Inputstring = [io.path]::GetFileNameWithoutExtension($file)
     $CharArray =$InputString.Split("-")
     $dbName = $CharArray[1]
-    $dbPath = $x[3].FullName
+    $dbPath = $file.FullName
 
 
     ### Restore

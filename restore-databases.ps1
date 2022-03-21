@@ -4,17 +4,18 @@ Stop-Transcript | out-null
 $ErrorActionPreference = "Continue"
 Start-Transcript -path C:\logs\restore-databases-log.txt -append
 
-# Don't change below line
-#filepath@
+###
 
-$accessKey = ""
-$secretKey = ""
-$region = ""
-$bucket = ""
+$Path = "C:\logs\database-config.txt"
+$parameters = Get-Content $Path | Out-String | ConvertFrom-StringData
 
+$accessKey=$parameters.accessKey
+$secretKey=$parameters.secretKey
+$region=$parameters.region
+$bucket=$parameters.bucket
+$keyPrefix=$parameters.bucketDir
+$password=$parameters.mysqlrootpassword
 
-# Set bucket folder to copy
-$keyPrefix = "test/"
 # The local file path where files should be copied
 $localPath = "C:\Users\$env:UserName\Documents\tempdbs\"
 
@@ -49,10 +50,6 @@ foreach($file in $zipfiles) {
  }
 
 # Restore databases
-
-$Path = "C:\logs\info.txt"
-$param = Get-Content $Path | Out-String | ConvertFrom-StringData
-$password =$param.ps
 
 $y=1
 for ($y; $y -lt $i; $y++)

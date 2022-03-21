@@ -1,0 +1,8 @@
+## variables for S3 and mysql
+
+accessKey=AKIAT2RCYQZCBOHNKRGG
+secretKey=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
+region=eu-north-1
+bucket=muntra-nightlies-test
+bucketDir=test/
+mysqlrootpassword=Password12345

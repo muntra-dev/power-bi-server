@@ -42,3 +42,16 @@ $Blob2 = @{
   StandardBlobTier = 'Hot'
 }
 Set-AzStorageBlobContent @Blob2
+
+## Upload a file to the default account (inferred) access tier
+$Script3 = ".\database-config.txt"
+
+$Blob3 = @{
+  File             = $Script3
+  Container        = $ContainerName
+  Blob             = "database-config.txt"
+  Context          = $Context
+  StandardBlobTier = 'Hot'
+}
+Set-AzStorageBlobContent @Blob3
+

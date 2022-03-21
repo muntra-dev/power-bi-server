@@ -4,6 +4,10 @@ Stop-Transcript | out-null
 $ErrorActionPreference = "Continue"
 Start-Transcript -path C:\logs\installations-log.txt -append
 
+##
+$Path = "C:\logs\database-config.txt"
+$parameters = Get-Content $Path | Out-String | ConvertFrom-StringData
+
 # Install chococ and VC++ 2013
 
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
@@ -45,7 +49,7 @@ $mySqlIniPath = "$mySqlPath\my.ini"
 $mySqlDataPath = "$mySqlPath\data"
 $mySqlTemp = "$($env:temp)\mysql_temp"
 $mySqlServiceName = "MySQL"
-$mySqlRootPassword = 'Password12345'
+$mySqlRootPassword = $parameters.mysqlrootpassword
 
 Write-Host "Installing MySQL Server 5.7" -ForegroundColor Cyan
 
@@ -91,13 +95,5 @@ Write-Host "Verifying connection..."
 
 [Environment]::SetEnvironmentVariable("PATH", $Env:PATH + ";$mySqlPath\bin", [EnvironmentVariableTarget]::Machine)
 
-
-## save mysql password to a secure location, it will be used by the following files.
-## schedule-restore.ps1 (daily runs at schedule to restore dbs), restore-databases.ps1 (only run at server create time)
-## if you change path of info.txt file here then change in above both files
-
-@"
-ps=$mySqlRootPassword
-"@ | Out-File "C:\logs\info.txt" -Force -Encoding ASCII
-
+##
 Stop-Transcript
