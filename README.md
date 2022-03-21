@@ -17,9 +17,9 @@ Navigate into the repo.
 cd power-bi-server
 ```
 
-Open the `variables.txt` using your preferred file editor. Here we'll use `code`:
+Open the `server-config.txt` using your preferred file editor. Here we'll use `code`:
 ```
-code variables.txt
+code server-config.txt
 ```
 
 Once you've opened the file, set the credentials that will be used for RDPing into the server:
@@ -52,7 +52,7 @@ After this, you're ready to run the installation:
 
 The script should take 15-20 mins.
 
-When it's done, RDP into the server using the public DNS name or server IP.
+When it's done, RDP into the server using the DNS or IP.
 
 make changes
 
@@ -60,12 +60,14 @@ make changes
 ## Files
 | Name | Description |
 | :--- | :---------- |
-| `variables.txt` | Holds variables used in the installation |
+| `server-config.txt` | Holds variables used in the server installation |
+| `database-config.txt` | Holds variables used in database download and restoring |
 | `create-server.ps1` | Main script that installs a Windows 2019 Server and calls the other scripts (except `delete-resources.ps1`) |
 | `installations.ps1` | Installs Power BI and MySQL 5.7.36 server. Change the MySQL root password to a strong string |
 | `restore-databases.ps1` | Creates and restores fresh databases. Downloads the database files from the S3 bucket and restores them in MySQL server. Requires an AWS Access key, a S3 bucket name and a directory path. Add your values before running `create-server.ps1` |
 | `schedule-restore.ps1` | Drops and restores databases, in scheduled task. Require an AWS Access key, a S3 bucket name and a directory path. Add your values before running `create-server.ps1` |
 | `task-schedule.ps1` | Adds a scheduled task that runs `schedule-restore.ps1` at 6AM Swedish time |
+| `upload-files-to-blob` | x |
 | `delete-resources.ps1` | Deletes the server and related resources from Azure |
 
 ## How to Delete Everything

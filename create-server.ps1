@@ -1,5 +1,5 @@
 # Create resource group
-$Path = ".\variables.txt"
+$Path = ".\server-config.txt"
 $parameters = Get-Content $Path | Out-String | ConvertFrom-StringData
 
 New-AzResourceGroup -Name $parameters.ResourceGroupName -Location $parameters.Location -Force
@@ -62,7 +62,7 @@ Invoke-AzVMRunCommand -ResourceGroupName $parameters.ResourceGroupName -VMName $
 
 # Upload content to blob container
 
-& .\uploadfilestoblob.ps1
+& .\upload-files-to-blob.ps1
 
 # Define file URIs
 $uri1 = "https://$($parameters.StorageAccountName).blob.core.windows.net/$($parameters.ContainerName)/task-schedule.ps1"

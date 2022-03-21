@@ -1,8 +1,6 @@
 
 # Delete resources
-$Path = ".\variables.txt"
+$Path = ".\server-config.txt"
 $parameters = Get-Content $Path | Out-String | ConvertFrom-StringData
 
-Remove-AzResourceGroup -Name $parameters.ResourceGroupName -Force 
-
-
+Remove-AzResourceGroup -Name $parameters.ResourceGroupName -Force

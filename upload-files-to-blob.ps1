@@ -1,5 +1,5 @@
 ## Create storage account and blob container
-$Path = ".\variables.txt"
+$Path = ".\server-config.txt"
 $parameters = Get-Content $Path | Out-String | ConvertFrom-StringData
 
 $StorageHT = @{
