@@ -93,3 +93,11 @@ To delete all the resources created by `create-server.ps1`, use the below comman
 ```
 ./delete-resources.ps1
 ```
+
+## Troubleshooting
+
+If the proposed VM is not available in your region, you can check all available VMs in your region:
+```
+Get-AzVMSize -Location "swedencentral"
+```
+and update the 'VMSize=' parameter in 'server-config.txt' accordingly
