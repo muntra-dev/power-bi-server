@@ -21,6 +21,10 @@ $localPath = "C:\Users\$env:UserName\Documents\tempdbs\"
 
 mkdir $localPath
 
+###
+# if mysql connection not installed, reinstall it
+choco install -y mysql-connector --force
+
 ## Install AWS PowerShell tools
 #Find-PackageProvider -Name "NuGet" -AllVersions -Force
 

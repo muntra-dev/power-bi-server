@@ -21,7 +21,7 @@ choco install -y dotnetfx
 choco install -y mysql.workbench
 
 # Install mysql connector 8.0.28
-choco install mysql-connector
+choco install -y mysql-connector
 
 # Install Microsoft Edge WebView2
 
