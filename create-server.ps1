@@ -28,7 +28,7 @@ $nsg = New-AzNetworkSecurityGroup -ResourceGroupName $parameters.ResourceGroupNa
 
 $SingleSubnet = New-AzVirtualNetworkSubnetConfig -Name $parameters.SubnetName -AddressPrefix $SubnetAddressPrefix -NetworkSecurityGroup $nsg -ServiceEndpoint "Microsoft.Storage"
 $Vnet = New-AzVirtualNetwork -Name $vnet -ResourceGroupName $parameters.ResourceGroupName -Location $parameters.Location -AddressPrefix $VnetAddressPrefix -Subnet $SingleSubnet
-$PIP = New-AzPublicIpAddress -Name $publicIP -DomainNameLabel $parameters.DNSNameLabel -ResourceGroupName $parameters.ResourceGroupName -Location $parameters.Location -AllocationMethod Dynamic
+$PIP = New-AzPublicIpAddress -Name $publicIP -DomainNameLabel $parameters.DNSNameLabel -ResourceGroupName $parameters.ResourceGroupName -Location $parameters.Location -AllocationMethod Static
 $NIC = New-AzNetworkInterface -Name $NIC -ResourceGroupName $parameters.ResourceGroupName -Location $parameters.Location -SubnetId $Vnet.Subnets[0].Id -PublicIpAddressId $PIP.Id
 
 $Credential = New-Object System.Management.Automation.PSCredential ($AdminUser, $AdminSecurePassword);
